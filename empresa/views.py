@@ -1,12 +1,25 @@
-from django.shortcuts import render, get_object_or_404
+from django.urls import reverse_lazy
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import Empresa
 
-# Lista todas as empresas
-def listar_empresas(request):
-    empresas = Empresa.objects.all()
-    return render(request, 'empresa/listar_empresas.html', {'empresas': empresas})
+class EmpresaListView(LoginRequiredMixin, ListView):
+    model = Empresa
+    context_object_name = 'empresas'
 
-# Detalhes de uma empresa específica
-def detalhes_empresa(request, id):
-    empresa = get_object_or_404(Empresa, id=id)
-    return render(request, 'empresa/detalhes_empresa.html', {'empresa': empresa})
+class EmpresaDetailView(LoginRequiredMixin, DetailView):
+    model = Empresa
+
+class EmpresaCreateView(LoginRequiredMixin, CreateView):
+    model = Empresa
+    fields = ['razao_social', 'cnpj', 'endereco', 'area_atuacao', 'email', 'senha']
+    success_url = reverse_lazy('empresa:empresa_list')
+
+class EmpresaUpdateView(LoginRequiredMixin, UpdateView):
+    model = Empresa
+    fields = ['razao_social', 'cnpj', 'endereco', 'area_atuacao', 'email', 'senha']
+    success_url = reverse_lazy('empresa:empresa_list')
+
+class EmpresaDeleteView(LoginRequiredMixin, DeleteView):
+    model = Empresa
+    success_url = reverse_lazy('empresa:empresa_list')

@@ -1,4 +1,6 @@
 from django.contrib import admin
 from .models import Empresa
 
-admin.site.register(Empresa)
+@admin.register(Empresa)
+class EmpresaAdmin(admin.ModelAdmin):
+    list_display = ('razao_social', 'cnpj', 'email', 'area_atuacao')
