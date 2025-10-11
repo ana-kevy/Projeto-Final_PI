@@ -1,3 +1,10 @@
-from django.shortcuts import render
+from django.http import HttpResponse
 
-# Create your views here.
+def lista_vagas(request):
+    return HttpResponse("Listagem de vagas")
+
+def cadastrar_vaga(request):
+    return HttpResponse("Página para cadastrar vaga")
+
+def enviar_mensagem(request):
+    return HttpResponse("Página para enviar mensagem")

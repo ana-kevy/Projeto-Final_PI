@@ -1,48 +1,12 @@
-from django.shortcuts import *
-from django.contrib.auth.decorators import *
-from .models import Vaga
-from .forms import VagaForm
+from django.shortcuts import render, get_object_or_404
+from .models import Empresa
 
-# Listar todas as vagas
-def listar_vagas(request):
-    vagas = Vaga.objects.all()
-    return render(request, "vaga/listar.html", {"vagas": vagas})
+# Lista todas as empresas
+def listar_empresas(request):
+    empresas = Empresa.objects.all()
+    return render(request, 'empresa/listar_empresas.html', {'empresas': empresas})
 
-# Detalhar uma vaga
-def detalhar_vaga(request, pk):
-    vaga = get_object_or_404(Vaga, pk=pk)
-    return render(request, "vaga/detalhar.html", {"vaga": vaga})
-
-# Criar vaga (somente empresa logada)
-@login_required
-def criar_vaga(request):
-    if request.method == "POST":
-        form = VagaForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect("listar_vagas")
-    else:
-        form = VagaForm()
-    return render(request, "vaga/form.html", {"form": form})
-
-# Editar vaga
-@login_required
-def editar_vaga(request, pk):
-    vaga = get_object_or_404(Vaga, pk=pk)
-    if request.method == "POST":
-        form = VagaForm(request.POST, instance=vaga)
-        if form.is_valid():
-            form.save()
-            return redirect("listar_vagas")
-    else:
-        form = VagaForm(instance=vaga)
-    return render(request, "vaga/form.html", {"form": form})
-
-# Excluir vaga
-@login_required
-def excluir_vaga(request, pk):
-    vaga = get_object_or_404(Vaga, pk=pk)
-    if request.method == "POST":
-        vaga.delete()
-        return redirect("listar_vagas")
-    return render(request, "vaga/confirmar_exclusao.html", {"vaga": vaga})
+# Detalhes de uma empresa específica
+def detalhes_empresa(request, id):
+    empresa = get_object_or_404(Empresa, id=id)
+    return render(request, 'empresa/detalhes_empresa.html', {'empresa': empresa})
