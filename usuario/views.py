@@ -1,53 +1,40 @@
-from django.urls import reverse_lazy
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
-from django.contrib.auth.mixins import LoginRequiredMixin
-from .models import Usuario, Mensagem
+from django.shortcuts import render, redirect
+from django.contrib.auth import login, logout, authenticate
+from django.contrib import messages
+from .forms import UsuarioForm, LoginForm
 
+def registrar_usuario(request):
+    if request.method == 'POST':
+        form = UsuarioForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Usuário registrado com sucesso!')
+            return redirect('login')
+        else:
+            messages.error(request, 'Erro ao registrar usuário. Verifique os campos.')
+    else:
+        form = UsuarioForm()
+    return render(request, 'usuario/registrar.html', {'form': form, 'titulo': 'Registrar'})
 
-# ----- Usuário -----
-class UsuarioListView(LoginRequiredMixin, ListView):
-    model = Usuario
-    context_object_name = 'usuarios'
+def login_usuario(request):
+    if request.method == 'POST':
+        form = LoginForm(request, data=request.POST)
+        if form.is_valid():
+            user = authenticate(
+                username=form.cleaned_data.get('username'),
+                password=form.cleaned_data.get('password')
+            )
+            if user:
+                login(request, user)
+                messages.success(request, f'Bem-vindo(a), {user.username}!')
+                return redirect('listar_vagas')
+            else:
+                messages.error(request, 'Usuário ou senha incorretos.')
+    else:
+        form = LoginForm()
+    return render(request, 'usuario/login.html', {'form': form, 'titulo': 'Login'})
 
-
-class UsuarioDetailView(LoginRequiredMixin, DetailView):
-    model = Usuario
-
-
-class UsuarioCreateView(CreateView):
-    model = Usuario
-    fields = ['username', 'first_name', 'last_name', 'email', 'cpf', 'endereco', 'curriculo', 'habilidades', 'link_portfolio', 'is_admin']
-    success_url = reverse_lazy('usuario:usuario_list')
-
-
-class UsuarioUpdateView(LoginRequiredMixin, UpdateView):
-    model = Usuario
-    fields = ['first_name', 'last_name', 'email', 'cpf', 'endereco', 'curriculo', 'habilidades', 'link_portfolio', 'is_admin']
-    success_url = reverse_lazy('usuario:usuario_list')
-
-
-class UsuarioDeleteView(LoginRequiredMixin, DeleteView):
-    model = Usuario
-    success_url = reverse_lazy('usuario:usuario_list')
-
-
-# ----- Mensagem -----
-class MensagemListView(LoginRequiredMixin, ListView):
-    model = Mensagem
-    context_object_name = 'mensagens'
-
-    def get_queryset(self):
-        user = self.request.user
-        if user.is_admin or user.is_staff:
-            return Mensagem.objects.all()
-        return Mensagem.objects.filter(candidato=user)
-
-
-class MensagemCreateView(LoginRequiredMixin, CreateView):
-    model = Mensagem
-    fields = ['empresa', 'conteudo']
-    success_url = reverse_lazy('usuario:mensagem_list')
-
-    def form_valid(self, form):
-        form.instance.candidato = self.request.user
-        return super().form_valid(form)
+def logout_usuario(request):
+    logout(request)
+    messages.info(request, 'Logout realizado com sucesso.')
+    return redirect('login')

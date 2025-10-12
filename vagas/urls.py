@@ -1,17 +1,10 @@
 from django.urls import path
 from . import views
 
-app_name = 'vagas'
-
 urlpatterns = [
-    path('', views.VagaListView.as_view(), name='vaga_list'),
-    path('nova/', views.VagaCreateView.as_view(), name='vaga_create'),
-    path('<int:pk>/', views.VagaDetailView.as_view(), name='vaga_detail'),
-    path('<int:pk>/editar/', views.VagaUpdateView.as_view(), name='vaga_update'),
-    path('<int:pk>/excluir/', views.VagaDeleteView.as_view(), name='vaga_delete'),
-
-    # candidaturas
-    path('candidatar/', views.CandidaturaCreateView.as_view(), name='candidatar'),
-    path('minhas-candidaturas/', views.CandidaturaListView.as_view(), name='minhas_candidaturas'),
-    path('candidatura/<int:pk>/', views.CandidaturaDetailView.as_view(), name='candidatura_detail'),
+    path('', views.listar_vagas, name='listar_vagas'),
+    path('criar/', views.criar_vaga, name='criar_vaga'),
+    path('editar/<int:pk>/', views.editar_vaga, name='editar_vaga'),
+    path('deletar/<int:pk>/', views.deletar_vaga, name='deletar_vaga'),
+    path('<int:vaga_id>/mensagens/', views.enviar_mensagem, name='enviar_mensagem'),
 ]

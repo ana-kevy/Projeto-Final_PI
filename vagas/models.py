@@ -1,37 +1,25 @@
 from django.db import models
 from empresa.models import Empresa
-from django.conf import settings
-
-User = settings.AUTH_USER_MODEL
-
+from usuario.models import Usuario
 
 class Vaga(models.Model):
-    titulo = models.CharField(max_length=255)
-    requisitos = models.TextField(blank=True, null=True)
-    local = models.CharField(max_length=255, blank=True, null=True)
-    tipo = models.CharField(max_length=100, blank=True, null=True)  # Presencial / Remoto
-    remuneracao = models.CharField(max_length=100, blank=True, null=True)
-    carga_horaria = models.CharField(max_length=50, blank=True, null=True)
     empresa = models.ForeignKey(Empresa, on_delete=models.CASCADE, related_name='vagas')
+    titulo = models.CharField(max_length=100)
+    descricao = models.TextField()
+    requisitos = models.TextField()
+    salario = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    ativo = models.BooleanField(default=True)
+    data_publicacao = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.titulo} - {self.empresa}"
+        return self.titulo
 
-
-class Candidatura(models.Model):
-    STATUS_CHOICES = [
-        ('pendente', 'Pendente'),
-        ('em_analise', 'Em análise'),
-        ('aprovado', 'Aprovado'),
-        ('reprovado', 'Reprovado'),
-    ]
-    candidato = models.ForeignKey(User, on_delete=models.CASCADE, related_name='candidaturas')
-    vaga = models.ForeignKey(Vaga, on_delete=models.CASCADE, related_name='candidaturas')
-    data_candidatura = models.DateTimeField(auto_now_add=True)
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pendente')
-
-    class Meta:
-        unique_together = ('candidato', 'vaga')
+class Mensagem(models.Model):
+    vaga = models.ForeignKey(Vaga, on_delete=models.CASCADE, related_name='mensagens')
+    empresa = models.ForeignKey(Empresa, on_delete=models.CASCADE)
+    candidato = models.ForeignKey(Usuario, on_delete=models.CASCADE)
+    conteudo = models.TextField()
+    data_envio = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.candidato} -> {self.vaga}"
+        return f"{self.candidato.username} → {self.empresa.nome}: {self.conteudo[:30]}"
