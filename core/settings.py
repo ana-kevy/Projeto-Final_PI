@@ -101,11 +101,15 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+AUTH_USER_MODEL = 'usuario.Usuario'
 
+LOGIN_URL = 'login'
+LOGIN_REDIRECT = 'listar_vagas'
+LOGOUT_REDIRECT_URL = 'login'
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'pt-br'
 
 TIME_ZONE = 'UTC'
 

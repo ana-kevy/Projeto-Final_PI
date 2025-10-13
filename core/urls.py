@@ -18,10 +18,11 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
-
-app_name = 'usuario'
+from usuario import views
 
 urlpatterns = [
+    
+    path('', views.login, name='login'),
     path('admin/', admin.site.urls),
     path('usuarios/', include('usuario.urls', namespace='usuario')),
     path('empresas/', include('empresa.urls', namespace='empresa')),
