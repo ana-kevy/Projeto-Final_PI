@@ -11,7 +11,7 @@ O projeto gerencia vagas de emprego, empresas e usuários.
 - Ambiente virtual recomendado
 
 ## 3. Estrutura do Projeto
-primeiro_emprego/ 'core'
+primeiro_emprego/
 ├── manage.py
 ├── db.sqlite3
 ├── primeiro_emprego/
