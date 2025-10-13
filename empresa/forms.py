@@ -1,10 +1,7 @@
 from django import forms
-from .models import Vaga
+from .models import Empresa
 
-class VagaForm(forms.ModelForm):
+class EmpresaForm(forms.ModelForm):
     class Meta:
-        model = Vaga
-        fields = [
-            'titulo', 'requisitos', 'local',
-            'tipo', 'remuneracao', 'carga_horaria', 'empresa'
-        ]
+        model = Empresa
+        fields = ['nome', 'cnpj', 'endereco', 'telefone', 'descricao']

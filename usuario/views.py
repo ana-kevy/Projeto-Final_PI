@@ -1,9 +1,13 @@
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin
-from .models import Usuario, Mensagem
+from .models import Usuario
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
+from django.contrib import messages
+from .forms import LoginForm
+from vagas.models import Mensagem
+
 
 # ----- Usuário -----
 class UsuarioListView(LoginRequiredMixin, ListView):
