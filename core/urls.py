@@ -22,8 +22,8 @@ from usuario import views
 
 urlpatterns = [
     
-    path('', views.login, name='login'),
     path('admin/', admin.site.urls),
+    path('', views.login, name='login'),
     path('usuarios/', include('usuario.urls', namespace='usuario')),
     path('empresas/', include('empresa.urls', namespace='empresa')),
     path('vagas/', include('vagas.urls', namespace='vagas')),
