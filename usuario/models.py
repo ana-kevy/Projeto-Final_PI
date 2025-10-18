@@ -1,13 +1,19 @@
-from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.db import models
 
-class Usuario(AbstractUser):
-    cpf = models.CharField(max_length=14, unique=True, blank=True, null=True)
-    endereco = models.CharField(max_length=255, blank=True, null=True)
-    curriculo = models.FileField(upload_to='curriculos/', blank=True, null=True)
-    habilidades = models.TextField(blank=True, null=True)
-    link_portfolio = models.URLField(blank=True, null=True)
-    is_admin = models.BooleanField(default=False)
+class UsuarioAdaptado(AbstractUser):
+    cpf = models.CharField(max_length=14, unique=True, null=True, blank=True)
+    nome_cidade = models.CharField(max_length=100, blank=True)
+    bairro = models.CharField(max_length=100, blank=True)
+    nome_mae = models.CharField(max_length=150, blank=True)
+    is_candidato = models.BooleanField(default=False)
+    is_empresa = models.BooleanField(default=False)
 
-    def __str__(self):
-        return self.get_full_name() or self.username
+    def is_gerente(self):
+        return self.groups.filter(name='GERENTE').exists()
+
+    def is_empresa(self):
+        return self.groups.filter(name='EMPRESA').exists()
+
+    def is_candidato(self):
+        return self.groups.filter(name='CANDIDATO').exists()
