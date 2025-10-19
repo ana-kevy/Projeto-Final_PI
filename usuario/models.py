@@ -3,9 +3,9 @@ from django.db import models
 
 class UsuarioAdaptado(AbstractUser):
     cpf = models.CharField(max_length=14, unique=True, null=True, blank=True)
-    nome_cidade = models.CharField(max_length=100, blank=True)
-    bairro = models.CharField(max_length=100, blank=True)
-    nome_mae = models.CharField(max_length=150, blank=True)
+    endereco = models.CharField(max_length=255, blank=True, null=True)
+    curriculo = models.FileField(upload_to='curriculos/', blank=True, null=True)
+    habilidades = models.TextField(blank=True, null=True)
     is_candidato = models.BooleanField(default=False)
     is_empresa = models.BooleanField(default=False)
 
