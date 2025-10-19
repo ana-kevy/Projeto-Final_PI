@@ -14,6 +14,7 @@ class Vaga(models.Model):
     def __str__(self):
         return self.titulo
 
+
 class Mensagem(models.Model):
     vaga = models.ForeignKey(Vaga, on_delete=models.CASCADE, related_name='mensagens')
     empresa = models.ForeignKey(Empresa, on_delete=models.CASCADE)
