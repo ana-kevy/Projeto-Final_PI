@@ -22,7 +22,17 @@ class UsuarioDetailView(LoginRequiredMixin, DetailView):
 class UsuarioCreateView(CreateView):
     model = Usuario
     fields = ['username', 'first_name', 'last_name', 'email', 'cpf', 'endereco', 'curriculo', 'habilidades', 'link_portfolio', 'is_admin']
+    template_name = 'cadastro_usuario.html'
     success_url = reverse_lazy('usuario:usuario_list')
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        messages.success(self.request, 'Cadastro realizado com sucesso! Faça login para continuar.')
+        return response
+    
+    def form_invalid(self, form):
+        messages.error(self.request, 'Por favor, corrija os erros abaixo.')
+        return super().form_invalid(self, form)
 
 
 class UsuarioUpdateView(LoginRequiredMixin, UpdateView):
@@ -81,4 +91,4 @@ def login(request):
     else:
         form = LoginForm()
     
-    return render(request, 'usuarios/login.html', {'form': form})
+    return render(request, 'login.html', {'form': form})
